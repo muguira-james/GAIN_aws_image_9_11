@@ -1,0 +1,22 @@
+{
+  "name": "docmon",
+  "version": "1.0.0",
+  "description": "tets",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.14.0",
+    "formidable": "^1.0.17",
+    "fs": "0.0.1-security",
+    "mongoose": "^4.6.0",
+    "nodemon": "^1.10.2",
+    "pdf-text-extract": "^1.4.1",
+    "replace-ext": "^1.0.0",
+    "textract": "^2.0.0"
+  }
+}

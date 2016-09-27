@@ -1,0 +1,175 @@
+<html>
+   <head>
+      <title>GAIN: Current Articles</title>
+      <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+<!-- ================================================================= -->
+      <style>
+         table, th , td {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+         }
+
+         table tr:nth-child(odd) {
+            background-color: #f2f2f2;
+         }
+
+         table tr:nth-child(even) {
+            background-color: #ffffff;
+         }
+         .selected {
+           background-color: black;
+           color:red;
+           font-weight: :bold;
+         }
+         li {
+           display: inline;
+         }
+         #container {
+           margin: auto;
+           border: 2px solid rgb(119,126,199)
+         }
+         .extrct {
+           padding-left: 100px;
+         }
+      </style>
+<!-- ================================================================= -->
+   </head>
+   <body ng-app = "myApp"; ng-controller="mySCtrl">
+     <ul>
+       <li><a href="/help">Help</a></li>
+     </ul>
+
+     <p>Choose an article title from the following scrollable list.</p>
+     <p>See the extracted information in the bottom of the page</p>
+
+      <h2>GAIN articles</h2>
+      <div style="height: 320px; overflow: scroll">
+
+        <table id="table">
+          <th>Index</th>
+          <th>Title</th>
+          <tr ng-repeat="x in names"
+                ng-class="{'selected': $index == selectedRow}"
+                ng-click="setClickedRow($index)">
+            <td> {{$index + 1 }} </td>
+            <td>  {{ x.title }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="container">
+      <h2>Extracted Information</h2>
+      <h3 id="title_label"></h3>
+
+      <div>
+          <b>Summary</b> <textarea class="extrct" id="summary" rows=8 cols='120'></textarea>
+      </div>
+      <div>
+      <div>
+        <b>Keywords</b> <textarea class="extrct" id="keywords" rows=2 cols='120'></textarea>
+      </div>
+      <div>
+        <b>Topics</b> <textarea class="extrct" id="topics" rows=2 cols='120'></textarea>
+      </div>
+      <div>
+        <b>Similar docs</b><textarea class="extrct" id="similar" rows=20 cols='120'></textarea>
+      </div>
+      <div>
+        <b>Body</b> <textarea class="extrct" id="body" rows=20 cols='120'></textarea>
+      </div>
+      <div>
+        <h2> File upload</h2>
+        <form id="file-form" action="/upload" method="POST">
+          <input type="file" id="file-select" name="uploads[]" multiple/>
+          <button type="submit" id="upload-button">Upload pdf/doc/docx</button>
+        </form>
+        <pre id="file-contents"/>
+      </div>
+    </div>
+      <script type="text/javascript">
+        var form = document.getElementById('file-form');
+        var fileSelect = document.getElementById('file-select');
+        var uploadButton = document.getElementById('upload-button');
+
+        form.onsubmit = function(event) {
+          event.preventDefault();
+          uploadButton.innrHTML = "Uploading ...";
+          var files = fileSelect.files;
+          var formData = new FormData();
+          for (var i=0; i<files.length; i++) {
+            var file = files[i];
+            formData.append('uploads[]', file, file.name);
+          }
+          var xhr = new XMLHttpRequest();
+
+          xhr.open('POST', '/upload', true);
+          //xhr.setRequestHeader('Content-Type', 'application/text');
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              //file upload worked
+              uploadButton.innerHTML = "Upload";
+            } else {
+              alert('file upload failed????');
+            }
+          };
+
+          xhr.send(formData);
+        }
+
+      </script>
+<!-- ===========================
+function readSingleFile(evt) {
+  var file = evt.target.files[0]; // get the file name
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    displayContent(contents);
+  };
+  reader.readAsText(file);
+
+
+};
+function displayContent(contents) {
+  var element = document.getElementById('file-contents').innerHTML = contents;
+
+}
+document.getElementById("fileinput")
+  .addEventListener('change', readSingleFile, false);
+  ==================================== -->
+
+      <script>
+
+         var app = angular.module('myApp', []);
+         app.controller('mySCtrl', function ($scope,$http) {
+            $scope.selectedRow = null;
+            var url = "/";
+
+            $http( {
+              method : "GET",
+              url : "/articles"
+            }).then(function mySucces(response) {
+              $scope.names = response.data;
+            }, function myError(response) {
+              $scope.names = response.statusText;
+            } );
+
+
+            $scope.setClickedRow = function(index)
+            {
+              $scope.selectedRow = index;
+              document.getElementById('summary').value =  $scope.names[index].summary;
+              document.getElementById('keywords').value =  $scope.names[index].keywords;
+              document.getElementById('topics').value =  $scope.names[index].latentTopics;
+              document.getElementById('similar').value =  $scope.names[index].similarList;
+              document.getElementById('body').value = $scope.names[index].body;
+              document.getElementById('title_label').innerText = $scope.names[index].title;
+            }
+          } );
+
+      </script>
+   </body>
+</html>

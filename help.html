@@ -1,0 +1,33 @@
+<html>
+<body>
+  <h1>Explaination of the Natural Language Processing capabilities of this application</h1>
+<p>
+This application uses Natural Language processing to extract information from documents.<p>
+
+<p>
+These documents should be in <b>pdf format</b>.  The underlying code changes the pdf file into text
+and then processes it. The extracted information is injected into the database for review.</p>
+
+<p>
+The following information is extracted:</p>
+<ui>
+<li><b>Summary</b> - A summary of the document.  Currently, this is a 100 word summary of the input
+  document.<br/>
+</li>
+<li><b>Keywords</b> - The document is processed for keywords. Keywords are important or representative
+of the entire text. Typically, the keywords are nouns.<br/>
+</li>
+<li><b>Topics</b> - At a deeper level, the document is also processed to extract topics. Topics are a deeper
+semantic representation of the document. Topics capture the meaning within the document
+and can be used for further information extraction.<br/>
+</li>
+<li><b>Similar documents</b> - The document is also compared to a subset of other documents in the FAS GAIN library
+in order to documents that are similar to the current document.</li><br/>
+</ui>
+<br/>
+Documents can also be uploaded from the users local drive.  These documents are processed and the extracted
+information is appended to the database. <br/>
+<b>Note: </b>There is no guarrentee that the uploaded document will have any similarities with
+existing the FAS/GAIN library.
+</body>
+</html>
